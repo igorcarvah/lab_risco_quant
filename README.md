@@ -74,7 +74,7 @@ lab-risco-quant/
 └── README.md                  # Documentação
 
 # Clone o repositório
-git clone [https://github.com/igorcarvah/lab_risco_quant.git](https://github.com/igorcarvah/lab_risco_quant.git)
+git clone https://github.com/igorcarvah/lab_risco_quant.git
 
 # Instale as dependências
 pip install pandas numpy matplotlib seaborn scipy yfinance
