@@ -23,6 +23,16 @@ Muitos investidores olham apenas para o gráfico de subida (Retorno). Porém, do
 
 ---
 
+## 🤖 Diferencial: Automação & Reporting
+
+Além da modelagem estatística, o projeto conta com um módulo de **Business Intelligence Automatizado**.
+Sabendo que em mesas de operações a tomada de decisão precisa ser rápida e visual, desenvolvi um pipeline de entrega executiva:
+
+* **Automação com Python (`openpyxl`):** Scripts dedicados calculam métricas complexas e geram Dashboards em Excel formatados automaticamente.
+* **Detecção de Anomalias:** O relatório aplica formatação condicional, destacando em **vermelho** ativos com Assimetria Negativa e em **negrito** ativos com "Caudas Gordas" (Kurtosis > 3), alertando o gestor sobre riscos ocultos.
+
+---
+
 ## 📐 Fundamentação Matemática (The Quant Engine)
 
 O projeto não utiliza apenas bibliotecas prontas; os cálculos foram implementados matematicamente em um módulo proprietário (`src/metricas_risco.py`) para garantir precisão e entendimento dos fundamentos.
@@ -50,25 +60,31 @@ Mede a queda percentual do topo histórico até o fundo. Essencial para gestão 
 
 O projeto segue princípios de **Engenharia de Software** para Ciência de Dados:
 
-* **Modularização:** O código principal (`notebooks/*.ipynb`) atua apenas como orquestrador e visualizador. Toda a lógica pesada reside na pasta `src/`.
+* **Modularização:** O código principal (`notebooks/*.ipynb`) atua apenas como orquestrador. A lógica pesada reside na pasta `src/`.
+* **Automação:** Scripts de rotina ficam isolados na pasta `scripts/` para fácil execução.
 * **ETL & Persistência:**
     * Extração via API `yfinance`.
     * Tratamento de MultiIndex e limpeza de dados.
-    * **Data Governance:** Os dados são salvos localmente em formato compactado, garantindo reprodutibilidade e performance.
-* **Hot-Reloading:** Uso de *magic commands* do Jupyter para desenvolvimento ágil.
+    * **Data Governance:** Os dados são salvos localmente, garantindo reprodutibilidade.
 
 ### Estrutura de Pastas
 ```text
 lab-risco-quant/
 │
 ├── 📁 dados/                  # Data Lake local (CSVs/ZIPs)
-├── 📁 notebooks/              # O Painel de Controle (Visualização)
+├── 📁 notebooks/              # O Painel de Controle (Visualização/Jupyter)
 │   └── 01_analise_caudas.ipynb
 │
-├── 📁 src/                    # O "Cérebro" do projeto
+├── 📁 reports/                # Relatórios Excel gerados automaticamente
+│   └── Relatorio_Risco_Quant_YYYYMMDD.xlsx
+│
+├── 📁 scripts/                # Scripts de Automação e Tarefas Agendadas
+│   └── gerar_relatorio.py
+│
+├── 📁 src/                    # O "Cérebro" do projeto (Bibliotecas internas)
 │   ├── __init__.py
 │   ├── dados_mercado.py       # ETL e Carga de dados
-│   └── metricas_risco.py      # Fórmulas Matemáticas
+│   └── metricas_risco.py      # Fórmulas Matemáticas (Kurtosis, Skewness, etc.)
 │
 ├── LICENSE                    # Licença MIT
 └── README.md                  # Documentação
