@@ -1,5 +1,11 @@
 # 🔬 Lab Risco Quant: Análise Estatística & Engenharia de Dados
 
+<div align="center">
+  <img src="assets/logo_lab_risco_v2.png" alt="Logo Lab Risco" width="250"/>
+</div>
+
+<br>
+
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue?style=for-the-badge&logo=python)
 ![SQL](https://img.shields.io/badge/SQL-SQLite-003B57?style=for-the-badge&logo=sqlite)
 ![Excel](https://img.shields.io/badge/Excel-Automation-217346?style=for-the-badge&logo=microsoft-excel)
@@ -12,7 +18,7 @@ Este projeto é um laboratório de **Estatística e Finanças Quantitativas** qu
 
 O objetivo é ir além da rentabilidade nominal e explorar a anatomia do risco, servindo como parte do portfólio acadêmico do curso de **Estatística da Universidade Anhembi Morumbi**.
 
-![Dashboard Preview](reports/print_exemplo.png)
+![Dashboard Preview](assets/dashboard_preview.png)
 
 ---
 
@@ -29,8 +35,8 @@ Muitos investidores olham apenas para o gráfico de subida (Retorno). Porém, do
 
 Diferente de scripts acadêmicos comuns, este projeto implementa um pipeline de dados profissional para suportar a tomada de decisão em mesas de operações:
 
-1.  **Engenharia de Dados (ETL):** Os dados não são baixados na hora da análise (o que seria frágil). Um script dedicado (`etl_sql.py`) extrai dados da B3 e os persiste em um banco de dados **SQL (SQLite)**, garantindo integridade e histórico.
-2.  **Reporting Automatizado:** O script de análise consome o SQL e utiliza a biblioteca `openpyxl` para gerar Dashboards em Excel com:
+1. **Engenharia de Dados (ETL):** Os dados não são baixados na hora da análise (o que seria frágil). Um script dedicado (`etl_sql.py`) extrai dados da B3 e os persiste em um banco de dados **SQL (SQLite)**, garantindo integridade e histórico.
+2. **Reporting Automatizado:** O script de análise consome o SQL e utiliza a biblioteca `openpyxl` para gerar Dashboards em Excel com:
     * **Cálculo de VaR 95%** (Value at Risk).
     * **Formatação Condicional:** Alertas visuais automáticos para riscos de cauda.
     * **Gráficos Nativos:** Geração automática de Scatter Plots (Risco x Retorno) via código.
@@ -77,22 +83,29 @@ O projeto segue princípios de **Separação de Responsabilidades (SoC)**:
 * **Persistência:** Uso de banco relacional (SQLite) ao invés de arquivos soltos.
 * **Orquestração:** Scripts separados para Carga (ETL) e Análise.
 
-### Estrutura de Pastas
-```text
+### 📂 Estrutura do Projeto
+```bash
 lab_risco_quant/
+│
+├── 📁 assets/                # Imagens, Logos e Prints para o README
+│   ├── dashboard_preview.png # Print do Dashboard limpo
+│   └── logo_lab_risco_v2.png # Identidade Visual
 │
 ├── 📁 dados/                 # Data Warehouse (SQLite)
 │   └── mercado.db            # Banco de dados (ignorado no git)
 │
-├── 📁 reports/               # Saída dos Dashboards
-│   ├── Relatorio_Risco.xlsx  # Excel final gerado pelo script
-│   └── print_exemplo.png     # Imagem do dashboard para o README
+├── 📁 notebooks/             # Jupyter Notebooks (Prototipagem)
+│   └── visualizacao.ipynb    # Gerador de gráficos/assets
 │
-├── 📁 scripts/               # Automação
+├── 📁 reports/               # Saída Final (Dashboards Gerados)
+│   └── Relatorio_Risco.xlsx  # O Excel pronto para uso
+│
+├── 📁 scripts/               # Automação (Pipeline de Produção)
 │   ├── etl_sql.py            # Coleta da B3 -> Salva no SQL
 │   └── gerar_relatorio.py    # Lê do SQL -> Calcula VaR -> Gera Excel
 │
-├── .gitignore                # Regras de exclusão
+├── 📁 src/                   # Códigos fonte auxiliares e configs
+├── .gitignore                # Arquivos ignorados pelo Git
 └── README.md                 # Documentação Técnica
 
 # Clone o repositório
