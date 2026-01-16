@@ -1,16 +1,18 @@
-# 🔬 Lab Risco Quant: Análise Estatística da B3
+# 🔬 Lab Risco Quant: Análise Estatística & Engenharia de Dados
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.12%2B-blue?style=for-the-badge&logo=python)
+![SQL](https://img.shields.io/badge/SQL-SQLite-003B57?style=for-the-badge&logo=sqlite)
+![Excel](https://img.shields.io/badge/Excel-Automation-217346?style=for-the-badge&logo=microsoft-excel)
 ![University](https://img.shields.io/badge/Universidade-Anhembi%20Morumbi-red?style=flat)
-![Methodology](https://img.shields.io/badge/Methodology-EDHEC%20Business%20School-darkblue?style=flat)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
 > *"No mercado financeiro, retorno é vaidade, risco é sanidade."*
 
-Este projeto é um laboratório de **Estatística e Finanças Quantitativas** que aplica a metodologia do curso *Investment Management with Python* da **EDHEC Business School** para analisar o comportamento real de ativos brasileiros (IBOVESPA, Vale, Petrobras, etc.).
+Este projeto é um laboratório de **Estatística e Finanças Quantitativas** que aplica metodologias de gestão de risco para analisar o comportamento real de ativos brasileiros (IBOVESPA, Vale, Petrobras, etc.).
 
 O objetivo é ir além da rentabilidade nominal e explorar a anatomia do risco, servindo como parte do portfólio acadêmico do curso de **Estatística da Universidade Anhembi Morumbi**.
+
+![Dashboard Preview](reports/print_exemplo.png)
 
 ---
 
@@ -23,71 +25,73 @@ Muitos investidores olham apenas para o gráfico de subida (Retorno). Porém, do
 
 ---
 
-## 🤖 Diferencial: Automação & Reporting
+## 🤖 Diferencial: Automação & Reporting (SQL Backend)
 
-Além da modelagem estatística, o projeto conta com um módulo de **Business Intelligence Automatizado**.
-Sabendo que em mesas de operações a tomada de decisão precisa ser rápida e visual, desenvolvi um pipeline de entrega executiva:
+Diferente de scripts acadêmicos comuns, este projeto implementa um pipeline de dados profissional para suportar a tomada de decisão em mesas de operações:
 
-* **Automação com Python (`openpyxl`):** Scripts dedicados calculam métricas complexas e geram Dashboards em Excel formatados automaticamente.
-* **Detecção de Anomalias:** O relatório aplica formatação condicional, destacando em **vermelho** ativos com Assimetria Negativa e em **negrito** ativos com "Caudas Gordas" (Kurtosis > 3), alertando o gestor sobre riscos ocultos.
+1.  **Engenharia de Dados (ETL):** Os dados não são baixados na hora da análise (o que seria frágil). Um script dedicado (`etl_sql.py`) extrai dados da B3 e os persiste em um banco de dados **SQL (SQLite)**, garantindo integridade e histórico.
+2.  **Reporting Automatizado:** O script de análise consome o SQL e utiliza a biblioteca `openpyxl` para gerar Dashboards em Excel com:
+    * **Cálculo de VaR 95%** (Value at Risk).
+    * **Formatação Condicional:** Alertas visuais automáticos para riscos de cauda.
+    * **Gráficos Nativos:** Geração automática de Scatter Plots (Risco x Retorno) via código.
 
 ---
 
 ## 📐 Fundamentação Matemática (The Quant Engine)
 
-O projeto não utiliza apenas bibliotecas prontas; os cálculos foram implementados matematicamente em um módulo proprietário (`src/metricas_risco.py`) para garantir precisão e entendimento dos fundamentos.
+Os cálculos foram implementados via `SciPy` e `NumPy` para garantir precisão estatística nos fundamentos:
 
 ### 1. Retorno Ajustado ao Risco (Sharpe Ratio)
 Utilizamos o índice de Sharpe para medir a eficiência da alocação.
-$$Sharpe = \frac{R_p - R_f}{\sigma_p}$$
-Onde $R_f$ (Risk Free) foi assumido como proxy do CDI/SELIC.
 
-### 2. Momentos Estatísticos (Além da Curva Normal)
-O mercado não segue perfeitamente uma Distribuição Normal (Gaussiana). Para capturar o "Risco de Cauda" (Cisnes Negros), calculamos os momentos superiores:
+$$
+Sharpe = \frac{R_p - R_f}{\sigma_p}
+$$
+
+Onde $R_f$ (Risk Free) foi definido como proxy da taxa básica de juros (CDI).
+
+### 2. Value at Risk (VaR 95%)
+Métrica padrão da indústria bancária (Basileia). Calculamos o percentil 5% da distribuição histórica de retornos para estimar a perda máxima esperada em 1 dia com 95% de confiança.
+
+### 3. Momentos Estatísticos (Além da Curva Normal)
+O mercado não segue perfeitamente uma Distribuição Normal. Para capturar o "Risco de Cauda" (Cisnes Negros), calculamos os momentos superiores:
 
 * **Assimetria (Skewness - 3º Momento):** Mede se o risco é maior para o lado negativo (quedas abruptas).
-  $$Skew = E\left[\left(\frac{X - \mu}{\sigma}\right)^3\right]$$
+$$
+Skew = E\left[\left(\frac{X - \mu}{\sigma}\right)^3\right]
+$$
 
-* **Curtose (Kurtosis - 4º Momento):** Identifica "Caudas Gordas". Se $Kurtosis > 3$, o ativo possui probabilidade elevada de eventos extremos (crises).
-  $$Kurt = E\left[\left(\frac{X - \mu}{\sigma}\right)^4\right]$$
-
-### 3. Drawdown (A Dor do Investidor)
-Mede a queda percentual do topo histórico até o fundo. Essencial para gestão de risco psicológico e de capital.
+* **Curtose (Kurtosis - 4º Momento):** Identifica "Caudas Gordas". Se $Kurtosis > 3$, o ativo possui probabilidade elevada de eventos extremos.
+$$
+Kurt = E\left[\left(\frac{X - \mu}{\sigma}\right)^4\right]
+$$
 
 ---
 
-## 🛠️ Arquitetura e Engenharia de Dados
+## 🛠️ Arquitetura do Projeto
 
-O projeto segue princípios de **Engenharia de Software** para Ciência de Dados:
+O projeto segue princípios de **Separação de Responsabilidades (SoC)**:
 
-* **Modularização:** O código principal (`notebooks/*.ipynb`) atua apenas como orquestrador. A lógica pesada reside na pasta `src/`.
-* **Automação:** Scripts de rotina ficam isolados na pasta `scripts/` para fácil execução.
-* **ETL & Persistência:**
-    * Extração via API `yfinance`.
-    * Tratamento de MultiIndex e limpeza de dados.
-    * **Data Governance:** Os dados são salvos localmente, garantindo reprodutibilidade.
+* **Persistência:** Uso de banco relacional (SQLite) ao invés de arquivos soltos.
+* **Orquestração:** Scripts separados para Carga (ETL) e Análise.
 
 ### Estrutura de Pastas
 ```text
-lab-risco-quant/
+lab_risco_quant/
 │
-├── 📁 dados/                  # Data Lake local (CSVs/ZIPs)
-├── 📁 notebooks/              # O Painel de Controle (Visualização/Jupyter)
-│   └── 01_analise_caudas.ipynb
+├── 📁 dados/                 # Data Warehouse (SQLite)
+│   └── mercado.db            # Banco de dados (ignorado no git)
 │
-├── 📁 reports/                # Relatórios Excel gerados automaticamente
-│   └── Relatorio_Risco_Quant_YYYYMMDD.xlsx
+├── 📁 reports/               # Saída dos Dashboards
+│   ├── Relatorio_Risco.xlsx  # Excel final gerado pelo script
+│   └── print_exemplo.png     # Imagem do dashboard para o README
 │
-├── 📁 scripts/                # Scripts de Automação e Tarefas Agendadas
-│   └── gerar_relatorio.py
+├── 📁 scripts/               # Automação
+│   ├── etl_sql.py            # Coleta da B3 -> Salva no SQL
+│   └── gerar_relatorio.py    # Lê do SQL -> Calcula VaR -> Gera Excel
 │
-├── 📁 src/                    # O "Cérebro" do projeto (Bibliotecas internas)
-│   ├── __init__.py
-│   ├── dados_mercado.py       # ETL e Carga de dados
-│   └── metricas_risco.py      # Fórmulas Matemáticas (Kurtosis, Skewness, etc.)
-│
-├── LICENSE                    # Licença MIT
-└── README.md                  # Documentação
+├── .gitignore                # Regras de exclusão
+└── README.md                 # Documentação Técnica
 
 # Clone o repositório
 git clone https://github.com/igorcarvah/lab_risco_quant.git
