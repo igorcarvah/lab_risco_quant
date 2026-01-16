@@ -57,11 +57,13 @@ Métrica padrão da indústria bancária (Basileia). Calculamos o percentil 5% d
 O mercado não segue perfeitamente uma Distribuição Normal. Para capturar o "Risco de Cauda" (Cisnes Negros), calculamos os momentos superiores:
 
 * **Assimetria (Skewness - 3º Momento):** Mede se o risco é maior para o lado negativo (quedas abruptas).
+
 $$
 Skew = E\left[\left(\frac{X - \mu}{\sigma}\right)^3\right]
 $$
 
 * **Curtose (Kurtosis - 4º Momento):** Identifica "Caudas Gordas". Se $Kurtosis > 3$, o ativo possui probabilidade elevada de eventos extremos.
+  
 $$
 Kurt = E\left[\left(\frac{X - \mu}{\sigma}\right)^4\right]
 $$
