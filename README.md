@@ -42,7 +42,10 @@ Gráfico de dispersão (Scatter Plot) gerado nativamente pelo Python dentro do E
 ## 📸 Screenshots
 
 *(Exemplo do Relatório Gerado Automaticamente)*
-![Dashboard Preview](reports/excel_final.png)
+
+![Dashboard Preview](reports/excel_final1.png)
+![Dashboard Preview](reports/excel_final2.png)
+![Dashboard Preview](reports/excel_final3.png)
 
 ---
 
