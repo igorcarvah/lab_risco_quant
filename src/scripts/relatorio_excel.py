@@ -224,3 +224,9 @@ for i, (t, d) in enumerate(termos):
 
 wb.save(CAMINHO_FINAL)
 print(f"✅ Relatório 'Pixel Perfect' gerado: {CAMINHO_FINAL}")
+
+# ==============================================================================
+# 4. EXECUÇÃO SEGURA
+# ==============================================================================
+if __name__ == "__main__":
+    main()
