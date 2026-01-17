@@ -1,112 +1,65 @@
-# 🔬 Lab Risco Quant: Análise Estatística & Engenharia de Dados
+# 🏦 Lab Risco Quant: Monitor de Risco de Mercado & Cisnes Negros
 
-<div align="center">
-  <img src="assets/logo_lab_risco_v2.png" alt="Logo Lab Risco" width="250"/>
-</div>
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Status](https://img.shields.io/badge/Status-Versão%20Final%201.0-green)
+![Domain](https://img.shields.io/badge/Finance-Risk%20Management-red)
 
-<br>
+> **"A volatilidade é o preço da admissão. A ruína é o risco a ser evitado."**
 
-![Python](https://img.shields.io/badge/Python-3.12%2B-blue?style=for-the-badge&logo=python)
-![SQL](https://img.shields.io/badge/SQL-SQLite-003B57?style=for-the-badge&logo=sqlite)
-![Excel](https://img.shields.io/badge/Excel-Automation-217346?style=for-the-badge&logo=microsoft-excel)
-![University](https://img.shields.io/badge/Universidade-Anhembi%20Morumbi-red?style=flat)
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
-
-> *"No mercado financeiro, retorno é vaidade, risco é sanidade."*
-
-Este projeto é um laboratório de **Estatística e Finanças Quantitativas** que aplica metodologias de gestão de risco para analisar o comportamento real de ativos brasileiros (IBOVESPA, Vale, Petrobras, etc.).
-
-O objetivo é ir além da rentabilidade nominal e explorar a anatomia do risco, servindo como parte do portfólio acadêmico do curso de **Estatística da Universidade Anhembi Morumbi**.
-
-![Dashboard Preview](assets/dashboard_preview.png)
+Este projeto é um laboratório prático de **Engenharia Financeira** e **Automação de Processos (RPA)**. O objetivo foi construir um pipeline "End-to-End" que monitora ativos da B3, calcula métricas avançadas de risco e gera relatórios de auditoria automaticamente.
 
 ---
 
-## 📖 O Problema (Storytelling)
+## 🎯 O Problema de Negócio
 
-Muitos investidores olham apenas para o gráfico de subida (Retorno). Porém, dois ativos podem entregar o mesmo retorno de 10% ao ano, mas com "viagens" completamente diferentes. Um pode ser uma estrada tranquila (baixa volatilidade), o outro uma montanha-russa emocional (alta volatilidade e *drawdowns* profundos).
+Em gestão de portfólio, olhar apenas para a **Volatilidade** (Desvio Padrão) é insuficiente. O verdadeiro perigo para o capital reside nos **Eventos de Cauda (Cisnes Negros)** — movimentos extremos e raros que quebram modelos tradicionais.
 
-**A pergunta que este projeto responde é:**
-> *Qual o custo (risco) que estou pagando por cada unidade de retorno que recebo? E quais ativos escondem riscos extremos (Caudas Gordas) que a média simples não mostra?*
-
----
-
-## 🤖 Diferencial: Automação & Reporting (SQL Backend)
-
-Diferente de scripts acadêmicos comuns, este projeto implementa um pipeline de dados profissional para suportar a tomada de decisão em mesas de operações:
-
-1. **Engenharia de Dados (ETL):** Os dados não são baixados na hora da análise (o que seria frágil). Um script dedicado (`etl_sql.py`) extrai dados da B3 e os persiste em um banco de dados **SQL (SQLite)**, garantindo integridade e histórico.
-2. **Reporting Automatizado:** O script de análise consome o SQL e utiliza a biblioteca `openpyxl` para gerar Dashboards em Excel com:
-    * **Cálculo de VaR 95%** (Value at Risk).
-    * **Formatação Condicional:** Alertas visuais automáticos para riscos de cauda.
-    * **Gráficos Nativos:** Geração automática de Scatter Plots (Risco x Retorno) via código.
+Este software resolve isso criando um **Sistema de Alerta Antecipado** que:
+1.  **Centraliza Dados:** Baixa e armazena histórico de preços em banco SQL local.
+2.  **Mede o Invisível:** Calcula *Kurtosis* (Curtose) e *Skewness* para detectar caudas gordas.
+3.  **Entrega Valor:** Gera um Dashboard Excel "Pixel Perfect" pronto para a diretoria, sem necessidade de intervenção manual.
 
 ---
 
-## 📐 Fundamentação Matemática (The Quant Engine)
+## 📊 O Produto Final (Dashboard)
 
-Os cálculos foram implementados via `SciPy` e `NumPy` para garantir precisão estatística nos fundamentos:
+O sistema gera um arquivo Excel com design profissional, contendo:
 
-### 1. Retorno Ajustado ao Risco (Sharpe Ratio)
-Utilizamos o índice de Sharpe para medir a eficiência da alocação.
+### 1. Zona de Dados & Métricas
+Cálculo automatizado de **VaR 95%**, **Sharpe Ratio** e **Max Drawdown** para ativos selecionados (IBOV, VALE3, PETR4, etc.).
 
-$$
-Sharpe = \frac{R_p - R_f}{\sigma_p}
-$$
+### 2. O "Detector de Cisne Negro"
+Um algoritmo analisa a distribuição estatística dos retornos. Se a **Kurtosis for > 3**, o sistema aciona um **ALERTA CRÍTICO** visual (Caixa Vermelha), indicando que aquele ativo possui alta probabilidade de eventos extremos.
 
-Onde $R_f$ (Risk Free) foi definido como proxy da taxa básica de juros (CDI).
-
-### 2. Value at Risk (VaR 95%)
-Métrica padrão da indústria bancária (Basileia). Calculamos o percentil 5% da distribuição histórica de retornos para estimar a perda máxima esperada em 1 dia com 95% de confiança.
-
-### 3. Momentos Estatísticos (Além da Curva Normal)
-O mercado não segue perfeitamente uma Distribuição Normal. Para capturar o "Risco de Cauda" (Cisnes Negros), calculamos os momentos superiores:
-
-* **Assimetria (Skewness - 3º Momento):** Mede se o risco é maior para o lado negativo (quedas abruptas).
-
-$$
-Skew = E\left[\left(\frac{X - \mu}{\sigma}\right)^3\right]
-$$
-
-* **Curtose (Kurtosis - 4º Momento):** Identifica "Caudas Gordas". Se $Kurtosis > 3$, o ativo possui probabilidade elevada de eventos extremos.
-  
-$$
-Kurt = E\left[\left(\frac{X - \mu}{\sigma}\right)^4\right]
-$$
+### 3. Visualização de Eficiência
+Gráfico de dispersão (Scatter Plot) gerado nativamente pelo Python dentro do Excel, cruzando Risco (Volatilidade) x Retorno.
 
 ---
 
-## 🛠️ Arquitetura do Projeto
+## 📸 Screenshots
 
-O projeto segue princípios de **Separação de Responsabilidades (SoC)**:
+*(Exemplo do Relatório Gerado Automaticamente)*
+![Dashboard Preview](reports/excel_final.png)
 
-* **Persistência:** Uso de banco relacional (SQLite) ao invés de arquivos soltos.
-* **Orquestração:** Scripts separados para Carga (ETL) e Análise.
+---
 
-### 📂 Estrutura do Projeto
-```bash
-lab_risco_quant/
-│
-├── 📁 assets/                # Imagens, Logos e Prints para o README
-│   ├── dashboard_preview.png # Print do Dashboard limpo
-│   └── logo_lab_risco_v2.png # Identidade Visual
-│
-├── 📁 dados/                 # Data Warehouse (SQLite)
-│   └── mercado.db            # Banco de dados (ignorado no git)
-│
-├── 📁 notebooks/             # Jupyter Notebooks (Prototipagem)
-│   └── visualizacao.ipynb    # Gerador de gráficos/assets
-│
-├── 📁 reports/               # Saída Final (Dashboards Gerados)
-│   └── Relatorio_Risco.xlsx  # O Excel pronto para uso
-│
-├── 📁 scripts/               # Automação (Pipeline de Produção)
-│   ├── etl_sql.py            # Coleta da B3 -> Salva no SQL
-│   └── gerar_relatorio.py    # Lê do SQL -> Calcula VaR -> Gera Excel
-│
-├── 📁 src/                   # Códigos fonte auxiliares e configs
-├── .gitignore                # Arquivos ignorados pelo Git
-└── README.md                 # Documentação Técnica
+## 🛠️ Arquitetura Técnica
+
+O projeto segue princípios de **Governança de Dados** e **Clean Code**, separando a lógica em camadas:
+
+```text
+LAB_RISCO_QUANT/
+├── dados/                   # Data Lake (SQLite + Arquivos Brutos)
+│   └── mercado.db           # Banco de Dados Histórico (Persistência)
+├── reports/                 # Saída dos Relatórios (.xlsx)
+├── src/                     # Código Fonte
+│   └── scripts/             
+│       ├── etl_sql.py       # Camada de Ingestão (YFinance -> SQL)
+│       └── relatorio_excel.py # Motor de Cálculo e Renderização Excel
+├── EXECUTAR_SISTEMA.bat     # Executável "One-Click" para usuário final
+├── README.md                # Documentação
+└── requirements.txt         # Dependências do Python
+
 
 # Clone o repositório
 git clone https://github.com/igorcarvah/lab_risco_quant.git
