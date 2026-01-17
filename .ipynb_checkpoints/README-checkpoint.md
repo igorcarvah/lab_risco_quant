@@ -1,8 +1,11 @@
 # 🏦 Lab Risco Quant: Monitor de Risco de Mercado & Cisnes Negros
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Status](https://img.shields.io/badge/Status-Versão%20Final%201.0-green)
-![Domain](https://img.shields.io/badge/Finance-Risk%20Management-red)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+![University](https://img.shields.io/badge/Universidade-Anhembi%20Morumbi-red)
+![Methodology](https://img.shields.io/badge/Methodology-EDHEC%20Business%20School-darkblue)
+![Domain](https://img.shields.io/badge/Finance-Risk%20Management-orange)
+
 
 > **"A volatilidade é o preço da admissão. A ruína é o risco a ser evitado."**
 
