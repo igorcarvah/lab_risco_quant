@@ -1,34 +1,24 @@
 @echo off
 chcp 65001 > nul
+title LAB RISCO QUANT - MONITORAMENTO & DISTRIBUICAO
+
 echo ========================================================
-echo      LAB RISCO QUANT - SISTEMA DE ANALISE DE MERCADO
+echo      🏦 LAB RISCO QUANT: AUTOMACAO FINANCEIRA 🚀
 echo ========================================================
 echo.
+echo [1/3] 🔄 Conectando no Banco de Dados e Atualizando Cotacoes...
+python src/scripts/etl_sql.py
 
-:: PASSO 1: Atualização (Com verificação de erro)
-echo 1. Atualizando Base de Dados (ETL)...
-:: Tenta rodar na pasta scripts. Se não achar, tenta na raiz src.
-if exist "src/scripts/etl_sql.py" (
-    python src/scripts/etl_sql.py
-) else (
-    echo [AVISO] Script ETL nao encontrado em src/scripts. Tentando rodar apenas o relatorio...
-)
 echo.
-
-:: PASSO 2: Geração do Relatório
-echo 2. Calculando Riscos e Gerando Relatorio...
+echo [2/3] 📊 Calculando Riscos e Gerando Dashboard Excel...
 python src/scripts/relatorio_excel.py
+
 echo.
+echo [3/3] 📧 Modulo de Distribuicao de Relatorios...
+python src/scripts/enviar_email.py
 
-:: PASSO 3: Abrir o Excel Automaticamente (O Pulo do Gato)
-echo 3. Abrindo o relatorio gerado...
-cd reports
-:: Este comando pega o último arquivo .xlsx criado (o mais novo)
-for /f "delims=" %%x in ('dir /b /od *.xlsx') do set "UltimoArquivo=%%x"
-start "" "%UltimoArquivo%"
-cd ..
-
+echo.
 echo ========================================================
-echo ✅ SUCESSO! O Excel deve abrir na sua tela agora.
+echo ✅ CICLO COMPLETO FINALIZADO!
 echo ========================================================
 pause

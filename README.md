@@ -19,39 +19,44 @@ Em gestão de portfólio, olhar apenas para a **Volatilidade** (Desvio Padrão) 
 
 Este software resolve isso criando um **Sistema de Alerta Antecipado** que:
 1.  **Centraliza Dados:** Baixa e armazena histórico de preços em banco SQL local.
-2.  **Mede o Invisível:** Calcula *Kurtosis* (Curtose) e *Skewness* para detectar caudas gordas.
-3.  **Entrega Valor:** Gera um Dashboard Excel "Pixel Perfect" pronto para a diretoria, sem necessidade de intervenção manual.
+2.  **Mede o Invisível:** Calcula *Kurtosis* (Curtose) e simula cenários de catástrofe (Monte Carlo com Caudas Pesadas).
+3.  **Entrega Valor:** Gera um Dashboard Excel e envia por e-mail para a diretoria, sem intervenção manual.
 
 ---
 
-## 📊 O Produto Final (Dashboard)
+## 🚀 Funcionalidades do Pipeline
 
-O sistema gera um arquivo Excel com design profissional, contendo:
+O sistema opera em 3 estágios automatizados:
 
-### 1. Zona de Dados & Métricas
-Cálculo automatizado de **VaR 95%**, **Sharpe Ratio** e **Max Drawdown** para ativos selecionados (IBOV, VALE3, PETR4, etc.).
+### 1. Motor Estatístico & Stress Test
+- Cálculo de **VaR 95%**, **Sharpe Ratio** e **Max Drawdown**.
+- **Detector de Cisne Negro:** Monitora a *Kurtosis*. Se K > 3, aciona alertas visuais.
+- **Simulador de Desastre:** Roda uma Simulação de Monte Carlo usando distribuição *t-Student* (Fat Tails) para prever perdas em cenários de crash, ignorando tendências passadas.
 
-### 2. O "Detector de Cisne Negro"
-Um algoritmo analisa a distribuição estatística dos retornos. Se a **Kurtosis for > 3**, o sistema aciona um **ALERTA CRÍTICO** visual (Caixa Vermelha), indicando que aquele ativo possui alta probabilidade de eventos extremos.
+### 2. Reporting "Pixel Perfect"
+- Geração de Excel nativo via Python (`openpyxl`).
+- Formatação condicional automática e gráficos de dispersão (Risco x Retorno) embutidos.
 
-### 3. Visualização de Eficiência
-Gráfico de dispersão (Scatter Plot) gerado nativamente pelo Python dentro do Excel, cruzando Risco (Volatilidade) x Retorno.
-
+### 3. 🤖 Smart Distribution Module (RPA)
+Automação inteligente de "Última Milha". O sistema detecta o ambiente e decide a estratégia de envio:
+- **Prioridade Corporativa:** Tenta conexão via **Outlook (Win32 API)** para ambientes bancários.
+- **Fallback Pessoal:** Se falhar, permite envio via **Gmail (SMTP Seguro)**.
+- **Modo Simulação:** Caso não haja credenciais, executa todo o fluxo de rede simulado (dry-run).
 ---
 
 ## 📸 Screenshots
 
 *(Exemplo do Relatório Gerado Automaticamente)*
 
-![Dashboard Preview](reports/excel_final1.png)
-![Dashboard Preview](reports/excel_final2.png)
-![Dashboard Preview](reports/excel_final3.png)
+| 📊 Tabela Detalhada | 📉 Gráfico de Eficiência | ⚠️ Alerta de Risco |
+| :---: | :---: | :---: |
+| ![Tabela](reports/excel_final1.png) | ![Gráfico](reports/excel_final2.png) | ![Alerta](reports/excel_final3.png) |
 
 ---
 
 ## 🛠️ Arquitetura Técnica
 
-O projeto segue princípios de **Governança de Dados** e **Clean Code**, separando a lógica em camadas:
+O projeto segue princípios de **Governança de Dados** e **Clean Code**:
 
 ```text
 LAB_RISCO_QUANT/
@@ -60,8 +65,9 @@ LAB_RISCO_QUANT/
 ├── reports/                 # Saída dos Relatórios (.xlsx)
 ├── src/                     # Código Fonte
 │   └── scripts/             
-│       ├── etl_sql.py       # Camada de Ingestão (YFinance -> SQL)
-│       └── relatorio_excel.py # Motor de Cálculo e Renderização Excel
+│       ├── etl_sql.py       # Ingestão Resiliente (Tratamento de Mudanças API)
+│       ├── relatorio_excel.py # Motor de Risco, Monte Carlo e Excel Builder
+│       └── enviar_email.py  # Módulo de Distribuição Híbrido (Outlook/Gmail)
 ├── EXECUTAR_SISTEMA.bat     # Executável "One-Click" para usuário final
 ├── README.md                # Documentação
 └── requirements.txt         # Dependências do Python
