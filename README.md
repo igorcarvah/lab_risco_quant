@@ -55,7 +55,7 @@ O relatório é gerado automaticamente e dividido em duas visões estratégicas:
 
 ### Aba 2: Stress Test (Beyond VaR)
 *Foco na sobrevivência. Comparativo de modelos de risco e alertas de cauda.*
-![Stress Test](reports/aba2png)
+![Stress Test](reports/aba2.png)
 
 ### Alerta Automático de Risco
 *Detecção de ativos com alta probabilidade de eventos extremos (Kurtosis > 3).*
